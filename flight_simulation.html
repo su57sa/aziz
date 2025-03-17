@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكاة سرعة الطيران</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #eef;
+        }
+        canvas {
+            border: 2px solid black;
+            background: skyblue;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>محاكاة سرعة الطيران</h1>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <button onclick="setSpeed('subsonic')">تحت صوتية (Mach 0.8)</button>
+        <button onclick="setSpeed('sonic')">صوتية (Mach 1.0)</button>
+        <button onclick="setSpeed('supersonic')">فوق صوتية (Mach 2.5)</button>
+        <button onclick="setSpeed('hypersonic')">فرط صوتية (Mach 6.0)</button>
+    </div>
+
+    <script>
+        let canvas = document.getElementById("gameCanvas");
+        let ctx = canvas.getContext("2d");
+
+        let planeImg = new Image();
+        planeImg.src = "https://upload.wikimedia.org/wikipedia/commons/3/36/Jet_airplane.png";
+
+        let plane = { x: 50, y: 150, speed: 2 };
+
+        function setSpeed(mode) {
+            let speeds = {
+                "subsonic": 2,
+                "sonic": 4,
+                "supersonic": 10,
+                "hypersonic": 24
+            };
+            plane.speed = speeds[mode];
+        }
+
+        function update() {
+            plane.x += plane.speed;
+            if (plane.x > canvas.width) {
+                plane.x = -100;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(planeImg, plane.x, plane.y, 100, 50);
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        planeImg.onload = function() {
+            gameLoop();
+        };
+    </script>
+</body>
+</html>
